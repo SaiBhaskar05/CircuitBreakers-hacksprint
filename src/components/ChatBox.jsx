@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import '../ChatBox.css';
+import "../ChatBox.css";
 
-const ChatBox = ({ user, groups }) => {
+const ChatBox = ({ groups }) => {
   const { groupName } = useParams(); // Get the group name from URL params
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [file, setFile] = useState(null);
   const navigate = useNavigate();
+
+  // Retrieve the user's name from localStorage
+  const userName = localStorage.getItem("userName");
 
   // Load the group's chat messages from localStorage
   useEffect(() => {
@@ -17,43 +20,50 @@ const ChatBox = ({ user, groups }) => {
 
   // Handle message sending
   const handleSendMessage = () => {
-    if (message || file) {
+    if (message.trim() || file) {
       // Create a new message object
       const newMessage = {
-        sender: user,
-        text: message,
+        sender: userName, // Use the username from localStorage
+        text: message.trim(),
         file: file ? URL.createObjectURL(file) : null,
         timestamp: new Date().toISOString(),
       };
 
       // Store the new message in localStorage
       const updatedMessages = [...messages, newMessage];
+      setMessages(updatedMessages);
       localStorage.setItem(groupName, JSON.stringify(updatedMessages));
 
-      // Update the state
-      setMessages(updatedMessages);
+      // Clear input fields
       setMessage("");
       setFile(null);
     } else {
-      alert("Please enter a message or upload a file.");
+      alert("Please enter a message or upload a valid file.");
     }
   };
 
   // Handle file input
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
   };
 
   return (
     <div className="chatbox-container">
-      <h2>Chat for {groupName}</h2>
+      <header className="chatbox-header">
+        <h2>{`Group Chat: ${groupName}`}</h2>
+      </header>
 
       <div className="messages-container">
         {messages.length > 0 ? (
           messages.map((msg, index) => (
             <div key={index} className="message">
-              <span><strong>{msg.sender}</strong>: </span>
-              <span>{msg.text}</span>
+              <div className="message-content">
+                {/* Display sender's username with the message */}
+                <strong>{msg.sender}</strong>: <span>{msg.text}</span>
+              </div>
               {msg.file && (
                 <div className="file-message">
                   <a href={msg.file} target="_blank" rel="noopener noreferrer">
@@ -65,8 +75,9 @@ const ChatBox = ({ user, groups }) => {
                   </a>
                 </div>
               )}
-              <br />
-              <small>{new Date(msg.timestamp).toLocaleString()}</small>
+              <div className="message-timestamp">
+                <small>{new Date(msg.timestamp).toLocaleString()}</small>
+              </div>
             </div>
           ))
         ) : (
@@ -74,15 +85,22 @@ const ChatBox = ({ user, groups }) => {
         )}
       </div>
 
-      {/* Message input */}
-      <div className="message-input">
+      <div className="message-input-container">
         <textarea
+          className="message-input"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type your message here"
+          placeholder="Type your message here..."
         />
-        <input type="file" onChange={handleFileChange} />
-        <button onClick={handleSendMessage}>Send</button>
+        <input
+          className="file-input"
+          type="file"
+          accept="image/*, .pdf, .docx, .txt"
+          onChange={handleFileChange}
+        />
+        <button className="send-button" onClick={handleSendMessage}>
+          Send
+        </button>
       </div>
     </div>
   );

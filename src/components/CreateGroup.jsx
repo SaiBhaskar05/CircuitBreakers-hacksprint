@@ -1,91 +1,88 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import '../ChatBox.css';
+import { useNavigate } from "react-router-dom";
+import "../CreateGroup.css"; // Optional, for styling
 
-const ChatBox = ({ userEmail, groups }) => {
-  const { groupName } = useParams(); // Get the group name from URL params
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [file, setFile] = useState(null);
-  const navigate = useNavigate();
+const CreateGroup = ({ setGroups, user }) => {
+  const [groupName, setGroupName] = useState('');
+  const [groupDescription, setGroupDescription] = useState('');
+  const navigate = useNavigate(); // Initialize navigate hook
 
-  // Load the group's chat messages from localStorage
+  // Use useEffect to check if the user is already in localStorage
   useEffect(() => {
-    const storedMessages = JSON.parse(localStorage.getItem(groupName)) || [];
-    setMessages(storedMessages);
-  }, [groupName]);
+    if (user) {
+      // Save the user details to localStorage if not already saved
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      if (!storedUser) {
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+    }
+  }, [user]); // Run when user changes
 
-  // Handle message sending
-  const handleSendMessage = () => {
-    if (message || file) {
-      // Create a new message object
-      const newMessage = {
-        sender: userEmail, // Use email here
-        text: message,
-        file: file ? URL.createObjectURL(file) : null,
-        timestamp: new Date().toISOString(),
-      };
+  // Handle group creation
+  const handleCreateGroup = () => {
+    if (groupName && groupDescription) {
+      // Retrieve stored groups or initialize an empty array
+      const storedGroups = JSON.parse(localStorage.getItem("groups")) || [];
+      console.log('Stored groups:', storedGroups); // Check stored groups
 
-      // Store the new message in localStorage
-      const updatedMessages = [...messages, newMessage];
-      localStorage.setItem(groupName, JSON.stringify(updatedMessages));
+      // Check if group name already exists
+      const isGroupNameExists = storedGroups.some(group => group.name === groupName);
+      console.log('Group name exists:', isGroupNameExists); // Check if group name exists
 
-      // Update the state
-      setMessages(updatedMessages);
-      setMessage("");
-      setFile(null);
+      if (isGroupNameExists) {
+        // If group name exists, show an alert and don't create the group
+        alert("Please choose a different group name. A group with this name already exists.");
+      } else {
+        // If group name is unique, create the new group with the 'creator' field
+        const newGroup = {
+          name: groupName,
+          description: groupDescription,
+          creator: user,  // Set the creator as the logged-in user
+        };
+        
+        // Add the new group to the existing groups array
+        storedGroups.push(newGroup);
+
+        // Save the updated groups list to localStorage
+        localStorage.setItem("groups", JSON.stringify(storedGroups));
+
+        // Update the state in the parent component (optional)
+        setGroups(storedGroups);
+
+        // Show success alert
+        alert(`Group "${groupName}" has been created successfully!`);
+
+        // Redirect to the explore groups page
+        navigate("/explore-groups");
+      }
     } else {
-      alert("Please enter a message or upload a file.");
+      alert("Please fill in both fields.");
     }
   };
 
-  // Handle file input
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
   return (
-    <div className="chatbox-container">
-      <h2>Chat for {groupName}</h2>
-
-      <div className="messages-container">
-        {messages.length > 0 ? (
-          messages.map((msg, index) => (
-            <div key={index} className="message">
-              <span><strong>{msg.sender}</strong>: </span>
-              <span>{msg.text}</span>
-              {msg.file && (
-                <div className="file-message">
-                  <a href={msg.file} target="_blank" rel="noopener noreferrer">
-                    {msg.file.includes("image") ? (
-                      <img src={msg.file} alt="uploaded" className="file-img" />
-                    ) : (
-                      <span>Click to view file</span>
-                    )}
-                  </a>
-                </div>
-              )}
-              <br />
-              <small>{new Date(msg.timestamp).toLocaleString()}</small>
-            </div>
-          ))
-        ) : (
-          <p>No messages yet. Be the first to send a message!</p>
-        )}
-      </div>
-
-      {/* Message input */}
-      <div className="message-input">
-        <textarea
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type your message here"
+    <div className="create-group-container">
+      <h2>Create a New Group</h2>
+      <div>
+        <label>Group Name:</label>
+        <input
+          type="text"
+          value={groupName}
+          onChange={(e) => setGroupName(e.target.value)}
+          placeholder="Enter group name"
         />
-        <input type="file" onChange={handleFileChange} />
-        <button onClick={handleSendMessage}>Send</button>
       </div>
+      <div>
+        <label>Description:</label>
+        <textarea
+          value={groupDescription}
+          onChange={(e) => setGroupDescription(e.target.value)}
+          placeholder="Enter group description"
+        />
+      </div>
+      <button onClick={handleCreateGroup}>Create Group</button>
     </div>
   );
 };
 
-export default ChatBox;
+export default CreateGroup;

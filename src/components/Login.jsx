@@ -3,7 +3,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import '../login.css';
 
 const Login = ({ setIsLoggedIn }) => {
-  const [email, setEmail] = useState('');
+  const [inputValue, setInputValue] = useState(''); // Single state for input
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
@@ -12,53 +12,63 @@ const Login = ({ setIsLoggedIn }) => {
     e.preventDefault();
     setErrorMessage('');
 
+    const storedUserName = localStorage.getItem('userName') || '';
     const storedEmail = localStorage.getItem('userEmail') || '';
     const storedPassword = localStorage.getItem('userPassword') || '';
 
-    const trimmedEmail = email.trim();
+    const trimmedInput = inputValue.trim();
     const trimmedPassword = password.trim();
 
-    if (!storedEmail || !storedPassword) {
+    if (!storedUserName || !storedEmail || !storedPassword) {
       setErrorMessage('No user found. Please sign up first.');
       return;
     }
 
-    if (trimmedEmail === storedEmail && trimmedPassword === storedPassword) {
+    const isEmail = trimmedInput.includes('@');
+    const isValid =
+      (isEmail && trimmedInput === storedEmail) ||
+      (!isEmail && trimmedInput === storedUserName);
+
+    if (isValid && trimmedPassword === storedPassword) {
       alert('Login Successful!');
       setIsLoggedIn(true);
-      navigate('/dashboard2'); // Navigate to the dashboard
+      navigate('/dashboard2');
     } else {
-      setErrorMessage('Invalid email or password. Please try again.');
+      setErrorMessage('Invalid email/username or password. Please try again.');
     }
   };
 
   return (
     <div className="auth-container">
-      <div className='container2'>
-      <center><h2>Login</h2></center>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <center><button id="button" type="submit">Login</button></center>
-      </form>
+      <div className="container2">
+        <center><h2>Login</h2></center>
+        <form onSubmit={handleLogin} autoComplete="off">
+          <input
+            type="text"
+            placeholder="Enter your username or email"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            required
+            autoComplete="off"
+            id="username-email"
+          />
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="new-password"
+            id="password"
+          />
+          <center><button id="button" type="submit">Login</button></center>
+        </form>
 
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      <p>
-        Don't have an account? <NavLink to="/signUp">Sign Up</NavLink>
-      </p>
+        <p>
+          Don't have an account? <NavLink to="/signUp">Sign Up</NavLink>
+        </p>
       </div>
     </div>
   );

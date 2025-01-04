@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../ExploreGroups.css";  // Optional, for styling
+import "../ExploreGroups.css"; // Optional, for styling
 
 const ExploreGroups = () => {
   const navigate = useNavigate();
@@ -47,18 +47,12 @@ const ExploreGroups = () => {
         <h1>HobbyHub</h1>
         <ul id="ul3">
           <li>
-            <button
-              className="nav-button"
-              onClick={() => navigate("/dashboard2")}
-            >
+            <button className="nav-button" onClick={() => navigate("/dashboard2")}>
               Home
             </button>
           </li>
           <li>
-            <button
-              className="nav-button"
-              onClick={() => navigate("/create-group")}
-            >
+            <button className="nav-button" onClick={() => navigate("/create-group")}>
               Create One
             </button>
           </li>
@@ -84,17 +78,20 @@ const ExploreGroups = () => {
                 {joinedGroups.includes(group.name) ? "Joined" : "Join"}
               </button>
 
-              <button
-                className="chat-button"
-                onClick={() => navigate(`/explore-groups/chat/${group.name}`)}
-              >
-                Chat
-              </button>
+              {/* Conditionally display the Chat button */}
+              {joinedGroups.includes(group.name) && (
+                <button
+                  className="chat-button"
+                  onClick={() => navigate(`/explore-groups/chat/${group.name}`)}
+                >
+                  Chat
+                </button>
+              )}
 
               {group.creator === user && (
                 <button
                   className="delete-group-button"
-                  onClick={() => deleteGroup(group.name)}
+                   onClick={() => deleteGroup(group.name)}
                 >
                   Delete Group
                 </button>
