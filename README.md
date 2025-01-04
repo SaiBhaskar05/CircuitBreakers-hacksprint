@@ -30,5 +30,5 @@ Welcome to **Collaborative Hobby Hub**, a platform designed to bring together in
 - creating main interface after login user can access the main page where the user can create, join and see the blogs posted by HobbyHub platform it's just frontend
 
 3rd commit:
--created navigation to inner dashboard and added features like join groups, explore groups and blogs, blogs are processed by admin of HobbyHub no one allowed create their own blogs so duplication will reduce, creation of new groups are processed and chat interface partially processed
+- created navigation to inner dashboard and added features like join groups, explore groups and blogs, blogs are processed by admin of HobbyHub no one allowed create their own blogs so duplication will reduce, creation of new groups are processed and chat interface partially processed
 
