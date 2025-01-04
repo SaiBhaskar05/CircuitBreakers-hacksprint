@@ -5,14 +5,18 @@ import Signup from './components/signUp';
 import Login from './components/login';
 import Dashboard2 from './components/Dashboard2';
 import ExploreGroups from './components/ExploreGroups'; // Ensure it's imported
-
+import Blog from './components/Blog';
+import CreateGroup from './components/CreateGroup';
+import ChatBox from './components/ChatBox';
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [groups, setGroups] = useState([]);
   // Check login status on component mount
   useEffect(() => {
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
     setIsLoggedIn(loggedIn);
+    const storedGroups = JSON.parse(localStorage.getItem("groups")) || [];
+    setGroups(storedGroups);
   }, []);
 
   return (
@@ -28,7 +32,10 @@ export const App = () => {
           path="/dashboard2"
           element={isLoggedIn ? <Dashboard2 setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/login" />}
         />
+        <Route path="/create-group" element={<CreateGroup setGroups={setGroups}/>}/>
         <Route path="/explore-groups" element={<ExploreGroups />} />
+        <Route path="/blogs" element={<Blog/>}/>
+        <Route path="/explore-groups/chat/:groupName" element={<ChatBox/>}/>
       </Routes>
     </Router>
   );

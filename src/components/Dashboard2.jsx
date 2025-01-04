@@ -12,11 +12,10 @@ export const Dashboard2 = ({ setIsLoggedIn }) => {
 
   useEffect(() => {
     AOS.init();
-    const loggedIn = localStorage.getItem('isLoggedIn');
-    if (loggedIn === 'true') {
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (loggedIn) {
       setLocalLoggedIn(true);
       setUserEmail(localStorage.getItem('userEmail'));
-      setUserLogo(localStorage.getItem('userLogo'));
     }
   }, []);
 
@@ -39,6 +38,12 @@ export const Dashboard2 = ({ setIsLoggedIn }) => {
 
   const handleExploreGroups = () => {
     navigate('/explore-groups');
+  }
+  const handleBlogs = () => {
+    navigate('/blogs');
+  }
+  const handleCreateGroup = () => {
+    navigate('/create-group')
   }
 
   return (
@@ -66,19 +71,19 @@ export const Dashboard2 = ({ setIsLoggedIn }) => {
         <img src="https://cdn-icons-png.freepik.com/256/16321/16321833.png?ga=GA1.1.1414198285.1727840973&semt=ais_hybrid" alt="Icon" />
           <h3>Create Groups</h3>
           <p>Start a new group and invite others to join and collaborate.</p>
-          <button>Create a Group</button>
+          <button onClick={handleCreateGroup}>Create a Group</button>
         </div>
         <div className="card" data-aos="fade-up">
         <img src="https://cdn-icons-png.freepik.com/256/9623/9623631.png?ga=GA1.1.1414198285.1727840973&semt=ais_hybrid" alt="Icon" />
           <h3>Blogs</h3>
           <p>Share your experiences and learn from others through blogs.</p>
-          <button>View Blogs</button>
+          <button onClick={handleBlogs}>View Blogs</button>
         </div>
       </div>
 
       {/* Footer Section */}
       <div className="footer2">
-        <h6>All rights reserved</h6>
+        <h6>&copy;All rights reserved, CIRCUIT BREAKERS</h6>
       </div>
     </div>
   );

@@ -98,7 +98,7 @@ Join us on a journey to make hobbies more meaningful, collaborative, and fun. Le
         </h5>
       </div>
       <div className="footer">
-        <h6>All rights reserved</h6>
+        <h5> &copy; All rights reserved, CIRCUIT BREAKERS </h5>
       </div>
     </div>
   );
