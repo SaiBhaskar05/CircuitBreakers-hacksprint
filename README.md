@@ -33,4 +33,7 @@ Welcome to **Collaborative Hobby Hub**, a platform designed to bring together in
 - created navigation to inner dashboard and added features like join groups, explore groups and blogs, blogs are processed by admin of HobbyHub no one allowed create their own blogs so duplication will reduce, creation of new groups are processed and chat interface partially processed
 
 4th commit:
-- Enhanced the chat interface and checked the functionality of chat interface and added the file sharing system in the chat process 
+- Enhanced the chat interface and checked the functionality of chat interface and added the file sharing system in the chat process
+
+5th commit:
+- MongoDB integration
