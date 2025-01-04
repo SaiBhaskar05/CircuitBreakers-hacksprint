@@ -4,6 +4,7 @@ import { Dashboard } from './components/Dashboard';
 import Signup from './components/signUp';
 import Login from './components/login';
 import Dashboard2 from './components/Dashboard2';
+import ExploreGroups from './components/ExploreGroups'; // Ensure it's imported
 
 export const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,8 +26,9 @@ export const App = () => {
         {/* Protected route */}
         <Route
           path="/dashboard2"
-          element={isLoggedIn ? <Dashboard2 /> : <Navigate to="/login" />}
+          element={isLoggedIn ? <Dashboard2 setIsLoggedIn={setIsLoggedIn} /> : <Navigate to="/login" />}
         />
+        <Route path="/explore-groups" element={<ExploreGroups />} />
       </Routes>
     </Router>
   );

@@ -230,14 +230,52 @@
   }  
 } 
 
-#about{
-  padding-top: 12vh;
+#about {
   display: flex;
-  align-items: center;
-  height: 100vh;
-  width: 100%; 
   flex-direction: column;
-  z-index: -1;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  width: 100%;
+  height: auto; /* Adjust height to fit content */
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+#about h2 {
+  font-size: 2rem;
+  color: #3C096C;
+  margin-bottom: 1rem;
+}
+
+#about p {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.6;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Responsive Styles for About Section */
+@media (max-width: 768px) {
+  #about h2 {
+    font-size: 1.8rem;
+  }
+
+  #about p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #about h2 {
+    font-size: 1.5rem;
+  }
+
+  #about p {
+    font-size: 0.8rem;
+  }
 }
 
 .footer{

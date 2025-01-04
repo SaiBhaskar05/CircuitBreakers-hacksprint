@@ -47,8 +47,6 @@ export const Dashboard = () => {
     setMenuOpen(!menuOpen);
   };
 
-
-
   return (
     <div>
       {/* Navigation Bar */}
@@ -59,7 +57,7 @@ export const Dashboard = () => {
         <ul id="ul1" className={menuOpen ? 'open' : ''}>
           <li><NavLink to="/" activeClassName="active">Home</NavLink></li>
           <li><NavLink to="/explore" activeClassName="active">Explore Groups</NavLink></li>
-          <li><NavLink to="#about" activeClassName="active">About</NavLink></li>
+          <li><a href="#about">About</a></li>
           <li><NavLink to="/contact" activeClassName="active">Contact Us</NavLink></li>
 
           <ul id="ul2" className={menuOpen ? 'open' : ''}>
@@ -84,7 +82,7 @@ export const Dashboard = () => {
       </div>
       <div id="about" data-aos="fade-up">
         <h2>About</h2>
-        <p>
+        <h5>
         Welcome to Collaborative Hobby Hub, a platform designed to bring hobby enthusiasts together!
 
 At Hobby Hub, we believe that hobbies are more than just pastimes—they are gateways to creativity, self-expression, and meaningful connections. Whether you're passionate about painting, coding, gardening, or exploring new skills, Hobby Hub is your go-to space to share, learn, and grow with like-minded individuals.
@@ -96,9 +94,10 @@ Showcase Your Talents: Share your creations, receive feedback, and inspire other
 Learn Together: Discover resources, join workshops, and expand your skillset through collaborative learning.
 Community for All: From beginners to experts, Hobby Hub welcomes everyone with open arms.
 Join us on a journey to make hobbies more meaningful, collaborative, and fun. Let’s turn passions into partnerships and ideas into actions!
-        </p>
+          {/* About content */}
+        </h5>
       </div>
-      <div className='footer'>
+      <div className="footer">
         <h6>All rights reserved</h6>
       </div>
     </div>
