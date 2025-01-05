@@ -37,3 +37,6 @@ Welcome to **Collaborative Hobby Hub**, a platform designed to bring together in
 
 5th commit:
 - MongoDB integration
+
+further commits:
+Deleted previously uploaded codes and uploaded organized directories where frontend and backend files in the repository
