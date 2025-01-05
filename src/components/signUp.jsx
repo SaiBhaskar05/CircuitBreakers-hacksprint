@@ -6,12 +6,12 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // To toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); // Clear any previous error messages
+    setErrorMessage("");
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -27,18 +27,24 @@ const Signup = () => {
       return;
     }
 
-    // Store user data in localStorage
-    localStorage.setItem("userName", UserName);
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("userPassword", password);
+    try {
+      const response = await fetch("http://localhost:3000/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ UserName, email, password }),
+      });
 
-    // Clear the form fields
-    setUserName("");
-    setEmail("");
-    setPassword("");
+      const data = await response.json();
 
-    alert("SignUp Successful! You can login now.");
-    navigate("/login"); // Navigate to login page
+      if (response.ok) {
+        alert(data.message);
+        navigate("/login");
+      } else {
+        setErrorMessage(data.message || "Signup failed. Please try again.");
+      }
+    } catch (error) {
+      setErrorMessage("Error connecting to the server. Please try again.");
+    }
   };
 
   return (
@@ -52,8 +58,6 @@ const Signup = () => {
             value={UserName}
             onChange={(e) => setUserName(e.target.value)}
             required
-            autoComplete="off"  // Disable autofill
-            name="signup-username"  // Add a unique name
           />
           <input
             type="email"
@@ -61,22 +65,18 @@ const Signup = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            autoComplete="off"  // Disable autofill
-            name="signup-email"  // Add a unique name
           />
           <div>
             <input
-              type={showPassword ? "text" : "password"} // Toggle password visibility
+              type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              autoComplete="off"  // Disable autofill
-              name="signup-password"  // Add a unique name
             />
             <button
               type="button"
-              onClick={() => setShowPassword(!showPassword)} // Toggle showPassword state
+              onClick={() => setShowPassword(!showPassword)}
               style={{ marginLeft: '10px', cursor: 'pointer' }}
             >
               {showPassword ? "Hide" : "Show"}

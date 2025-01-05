@@ -10,7 +10,7 @@ const ChatBox = ({ groups }) => {
   const navigate = useNavigate();
 
   // Retrieve the user's name from localStorage
-  const userName = localStorage.getItem("userName");
+  const userName = localStorage.getItem("userName");  // Get the userName from localStorage
 
   // Load the group's chat messages from localStorage
   useEffect(() => {

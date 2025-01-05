@@ -8,33 +8,50 @@ const Login = ({ setIsLoggedIn }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    setErrorMessage('');
-
-    const storedUserName = localStorage.getItem('userName') || '';
-    const storedEmail = localStorage.getItem('userEmail') || '';
-    const storedPassword = localStorage.getItem('userPassword') || '';
+    setErrorMessage(''); // Clear any previous error messages
 
     const trimmedInput = inputValue.trim();
     const trimmedPassword = password.trim();
 
-    if (!storedUserName || !storedEmail || !storedPassword) {
-      setErrorMessage('No user found. Please sign up first.');
+    // Check if both fields are filled
+    if (!trimmedInput || !trimmedPassword) {
+      setErrorMessage('Please fill in both fields.');
       return;
     }
 
-    const isEmail = trimmedInput.includes('@');
-    const isValid =
-      (isEmail && trimmedInput === storedEmail) ||
-      (!isEmail && trimmedInput === storedUserName);
+    try {
+      // Send login request to the server
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          emailOrUserName: trimmedInput,
+          password: trimmedPassword,
+        }),
+      });
 
-    if (isValid && trimmedPassword === storedPassword) {
-      alert('Login Successful!');
-      setIsLoggedIn(true);
-      navigate('/dashboard2');
-    } else {
-      setErrorMessage('Invalid email/username or password. Please try again.');
+      const data = await response.json();
+
+      if (response.ok) {
+        // On successful login, save userName in localStorage
+        localStorage.setItem('userName', data.userName); // Store userName from the response
+        localStorage.setItem('userId', data.userId); // Optionally store userId if needed
+
+        alert(data.message); // Display success message
+        setIsLoggedIn(true); // Set login state to true
+
+        // Navigate to the dashboard
+        navigate('/dashboard2');
+      } else {
+        // Display error message if login failed
+        setErrorMessage(data.message || 'Invalid login credentials. Please try again.');
+      }
+    } catch (error) {
+      setErrorMessage('Error connecting to the server. Please try again.');
     }
   };
 
